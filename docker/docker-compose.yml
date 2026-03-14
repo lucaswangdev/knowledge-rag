@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  knowledge-rag:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: knowledge-rag
+    ports:
+      - "8000:8000"
+    environment:
+      - MASTER_DB_HOST=postgres-master
+      - MASTER_DB_PORT=5432
+      - MASTER_DB_USER=postgres
+      - MASTER_DB_PASSWORD=postgres
+      - MASTER_DB_NAME=knowledge_master
+      - MODEL_PATH=./models
+      - MODEL_NAME=BAAI/bge-m3
+      - USE_FP16=false
+      - DEVICE=cpu
+    volumes:
+      - ../models:/app/models
+    depends_on:
+      - postgres-master
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+    networks:
+      - knowledge-rag-network
+
+  postgres-master:
+    image: postgres:15
+    container_name: postgres-master
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: knowledge_master
+    volumes:
+      - postgres-master-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - knowledge-rag-network
+
+volumes:
+  postgres-master-data:
+
+networks:
+  knowledge-rag-network:
+    driver: bridge
