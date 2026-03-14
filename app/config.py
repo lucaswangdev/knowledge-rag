@@ -19,13 +19,13 @@ class Settings(BaseSettings):
     app_port: int = 8000
     app_workers: int = 1
     
-    # 模型配置（保留兼容字段）
+    # 模型配置（兼容性字段，当前使用Ollama API）
     model_path: str = "./models"
     model_name: str = "BAAI/bge-m3"
     use_fp16: bool = False
     device: str = "cpu"
 
-    # Ollama 配置
+    # Ollama 配置（当前使用的向量化服务）
     ollama_base_url: str = "http://localhost:11434"
     ollama_embed_model: str = "bge-m3"
     
