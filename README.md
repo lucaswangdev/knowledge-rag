@@ -7,7 +7,7 @@
 **🎉 项目已成功运行！**
 
 - ✅ Python 3.11.13 + uv包管理
-- ✅ 所有依赖已安装（torch 2.2.2, FlagEmbedding, FastAPI等）
+- ✅ 所有依赖已安装（FastAPI、PostgreSQL、Ollama API等）
 - ✅ 测试通过率: 9/9 (100%)
 - ✅ 核心功能验证: 7/7 (100%)
 
@@ -31,7 +31,7 @@ Knowledge-RAG 是面向企业的私有知识库RAG服务，基于bge-m3向量模
 
 - FastAPI - Web框架
 - PostgreSQL + pgvector - 向量数据库
-- FlagEmbedding (bge-m3) - 向量化模型
+- Ollama API (bge-m3) - 向量化服务
 - Docker - 容器化部署
 
 ## 快速开始
@@ -43,7 +43,7 @@ Knowledge-RAG 是面向企业的私有知识库RAG服务，基于bge-m3向量模
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # 2. 克隆项目
-git clone https://github.com/your-repo/knowledge-rag.git
+git clone https://github.com/lucaswangdev/knowledge-rag.git
 cd knowledge-rag
 
 # 3. 一键启动（自动安装依赖、运行测试、启动服务）
@@ -84,13 +84,6 @@ psql -h localhost -U postgres -c "CREATE DATABASE knowledge_app_001;"
 psql -h localhost -U postgres -d knowledge_app_001 -f init_app.sql
 ```
 
-## 🔑 关键技术决策
-
-- **Python 3.11**: torch 2.2.2不支持Python 3.12
-- **torch 2.2.2**: 最后支持macOS x86_64 (Intel Mac)的版本
-- **numpy<2**: 兼容torch 2.2.2
-- **transformers<5**: 兼容torch 2.2.2
-- **uv包管理**: 现代化的Python包管理器，速度快、依赖解析准确
 
 ## 📁 项目文档
 
