@@ -1,0 +1,44 @@
+{
+  "skill_name": "knowledge-rag",
+  "skill_version": "1.0.0",
+  "description": "企业级私有知识库 RAG 检索技能",
+  "enabled": true,
+
+  "api_config": {
+    "base_url": "http://localhost:8000",
+    "timeout": 30,
+    "retry": 3
+  },
+
+  "auth": {
+    "app_id": "app_001",
+    "app_secret": "test_secret_001"
+  },
+
+  "search_config": {
+    "default_top_k": 5,
+    "min_similarity_score": 0.7,
+    "enable_deduplication": true
+  },
+
+  "chat_config": {
+    "default_top_k": 3,
+    "enable_session": true,
+    "max_context_length": 2000
+  },
+
+  "trigger_keywords": [
+    "根据知识库",
+    "查询文档",
+    "搜索资料",
+    "参考文档",
+    "有没有相关资料",
+    "帮我查一下"
+  ],
+
+  "response_template": {
+    "with_sources": "根据知识库检索结果：\n\n{answer}\n\n📚 参考来源：\n{sources}",
+    "no_results": "抱歉，在知识库中没有找到相关内容。我可以基于一般知识为您解答：",
+    "error": "知识库检索服务暂时不可用，我将基于一般知识为您解答："
+  }
+}

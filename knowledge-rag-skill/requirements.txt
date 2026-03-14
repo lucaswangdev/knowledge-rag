@@ -1,0 +1,11 @@
+# Knowledge-RAG Skill for OpenClaw
+# Python 依赖包
+
+# HTTP 请求
+requests>=2.31.0
+
+# JSON 处理（Python 内置，无需安装）
+# json
+
+# 类型注解（Python 3.11+ 内置）
+# typing
