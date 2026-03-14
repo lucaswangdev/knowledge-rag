@@ -31,12 +31,13 @@ except ImportError:
 class RetrievalEvaluator:
     """向量检索质量评估器"""
 
-    def __init__(self, test_cases_file: str):
+    def __init__(self, test_cases_file: str, count_by_chunk: bool = True):
         """
         初始化评估器
 
         Args:
             test_cases_file: 测试用例JSON文件路径
+            count_by_chunk: 是否按chunk计数（True推荐，更准确反映实际体验）
         """
         if not os.path.exists(test_cases_file):
             print(f"❌ 测试用例文件不存在: {test_cases_file}")
@@ -52,8 +53,10 @@ class RetrievalEvaluator:
             print(f"❌ 测试用例为空，请添加测试用例")
             sys.exit(1)
 
+        self.count_by_chunk = count_by_chunk
         self.results = defaultdict(list)
         print(f"✅ 加载了 {len(self.test_cases)} 个测试用例")
+        print(f"📊 评估模式: {'按chunk计数（推荐）' if count_by_chunk else '按document计数'}")
 
     def evaluate(self, retrieval_function, k_values: List[int] = [3, 5, 10]):
         """
@@ -160,13 +163,24 @@ class RetrievalEvaluator:
         """计算召回率"""
         if not relevant:
             return 0.0
-        return len(set(retrieved) & relevant) / len(relevant)
+        if self.count_by_chunk:
+            # 按chunk计数：retrieved是chunk列表，只要相关文档的chunk出现就算
+            return 1.0 if any(doc_id in relevant for doc_id in retrieved) else 0.0
+        else:
+            # 按document计数（原方式）
+            return len(set(retrieved) & relevant) / len(relevant)
 
     def _calculate_precision(self, retrieved: List[int], relevant: set) -> float:
         """计算精确率"""
         if not retrieved:
             return 0.0
-        return len(set(retrieved) & relevant) / len(retrieved)
+        if self.count_by_chunk:
+            # 按chunk计数：计算相关chunk的比例
+            relevant_count = sum(1 for doc_id in retrieved if doc_id in relevant)
+            return relevant_count / len(retrieved)
+        else:
+            # 按document计数（原方式）
+            return len(set(retrieved) & relevant) / len(retrieved)
 
     def _calculate_mrr(self, retrieved: List[int], relevant: set) -> float:
         """计算MRR"""
