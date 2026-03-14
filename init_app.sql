@@ -1,5 +1,5 @@
 -- Knowledge-RAG 应用数据库初始化脚本
--- 每个应用独立的数据库需要执行此脚本
+-- 使用 pgvector 向量数据库
 
 -- 启用pgvector扩展
 CREATE EXTENSION IF NOT EXISTS vector;
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS documents (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- 向量表 (bge-m3: 1024维)
+-- 向量表 (使用pgvector类型)
 CREATE TABLE IF NOT EXISTS document_chunks (
     id SERIAL PRIMARY KEY,
     document_id INT REFERENCES documents(id) ON DELETE CASCADE,
@@ -29,13 +29,9 @@ CREATE TABLE IF NOT EXISTS document_chunks (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- 向量索引 (HNSW近似搜索)
+-- HNSW向量索引 (pgvector提供的近似搜索)
 CREATE INDEX IF NOT EXISTS idx_chunks_vector_hnsw 
 ON document_chunks USING hnsw (dense_vector vector_cosine_ops);
-
--- 全文检索索引 (GIN)
-CREATE INDEX IF NOT EXISTS idx_chunks_text_gin 
-ON document_chunks USING gin (to_tsvector('chinese', chunk_text));
 
 -- 文档索引
 CREATE INDEX IF NOT EXISTS idx_documents_status ON documents(status);
@@ -60,6 +56,7 @@ CREATE TABLE IF NOT EXISTS chat_messages (
 
 -- 注释
 COMMENT ON TABLE documents IS '文档表';
-COMMENT ON TABLE document_chunks IS '文档向量表';
+COMMENT ON TABLE document_chunks IS '文档向量表(pgvector)';
 COMMENT ON TABLE chat_sessions IS '对话会话表';
 COMMENT ON TABLE chat_messages IS '对话消息表';
+COMMENT ON COLUMN document_chunks.dense_vector IS 'pgvector(1024维)';

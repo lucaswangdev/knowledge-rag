@@ -25,25 +25,26 @@ class KnowledgeService:
             
         # 1. 查询向量化
         query_vector = bge3_service.encode_query(query)
+        query_vec_str = '[' + ','.join(str(float(v)) for v in query_vector) + ']'
         
         with db_router.get_connection(app_config) as conn:
-            # 2. 向量检索 (使用余弦距离)
+            # 2. 使用pgvector的向量检索 (<=> 是余弦距离操作符)
             sql = text("""
                 SELECT 
                     dc.chunk_text,
                     dc.document_id,
                     d.title as document_title,
-                    1 - (dc.dense_vector <=> :query_vec) as similarity,
+                    1 - (dc.dense_vector <=> CAST(:query_vec AS vector)) as similarity,
                     dc.chunk_index
                 FROM document_chunks dc
                 JOIN documents d ON dc.document_id = d.id
                 WHERE d.status = 'active'
-                ORDER BY dc.dense_vector <=> :query_vec
+                ORDER BY dc.dense_vector <=> CAST(:query_vec AS vector)
                 LIMIT :top_k
             """)
             
             rows = conn.execute(sql, {
-                "query_vec": query_vector,
+                "query_vec": query_vec_str,
                 "top_k": top_k
             }).fetchall()
             
