@@ -42,7 +42,8 @@ def test_bge_service_mock():
     
     # 测试向量化
     result = bge3_service.encode_texts(["测试文本"])
-    assert 'dense_vecs' in result or result.get('dense_vecs') is not None
+    assert 'dense_vecs' in result
+    assert len(result['dense_vecs']) > 0
     
     # 测试查询向量化
     vec = bge3_service.encode_query("测试查询")

@@ -1,4 +1,5 @@
 """Knowledge-RAG - 文档服务"""
+import json
 import logging
 from typing import Optional, List, Dict, Any
 from sqlalchemy import text
@@ -28,7 +29,7 @@ class DocumentService:
             """), {
                 "title": title,
                 "content": content,
-                "tags": tags,
+                "tags": json.dumps(tags) if tags is not None else None,
                 "source": source
             })
             row = result.fetchone()

@@ -24,23 +24,42 @@ async def lifespan(app: FastAPI):
     # 启动时
     logger.info("=" * 50)
     logger.info("Knowledge-RAG 启动中...")
-    
+
     # 初始化主数据库连接
     db_router.init_master()
-    
-    # 预加载模型（可选，懒加载也可以）
-    # bge3_service.load_model(
-    #     model_name=settings.model_name,
-    #     use_fp16=settings.use_fp16,
-    #     device=settings.device,
-    #     cache_folder=settings.model_path
-    # )
-    
+
+    # 加载BGE-M3模型
+    bge3_service.load_model(
+        model_name=settings.model_name,
+        use_fp16=settings.use_fp16,
+        device=settings.device,
+        cache_folder=settings.model_path
+    )
+
+    # 预热：执行一次向量编码
+    try:
+        logger.info("🔥 预热向量模型...")
+        _ = bge3_service.encode_query("预热测试查询")
+        logger.info("✅ 向量模型预热完成")
+    except Exception as e:
+        logger.warning(f"⚠️  向量模型预热失败: {e}")
+
+    # 预热：预热数据库连接和向量索引
+    try:
+        logger.info("🔥 预热数据库连接和向量索引...")
+        app_config = db_router.get_app_config("app_001")
+        from app.services.knowledge_service import knowledge_service
+        # 执行一次空查询，预热HNSW索引
+        knowledge_service.search(app_config, "预热查询", top_k=5)
+        logger.info("✅ 数据库和索引预热完成")
+    except Exception as e:
+        logger.warning(f"⚠️  数据库预热失败: {e}")
+
     logger.info("Knowledge-RAG 启动完成")
     logger.info("=" * 50)
-    
+
     yield
-    
+
     # 关闭时
     logger.info("Knowledge-RAG 关闭")
 
