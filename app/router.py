@@ -1,6 +1,7 @@
 """Knowledge-RAG - 路由"""
 import logging
-from fastapi import APIRouter, Depends, Request
+from typing import List
+from fastapi import APIRouter, Depends, Request, File, Form, UploadFile
 from fastapi.responses import JSONResponse
 
 from app.middleware.auth import get_app_config, AuthService
@@ -8,6 +9,7 @@ from app.services.db_service import AppConfig
 from app.services.document_service import document_service
 from app.services.knowledge_service import knowledge_service
 from app.services.bge_service import bge3_service
+from app.services.file_service import file_service
 from app.models.response import ApiResponse
 from app.config import settings
 
@@ -117,6 +119,59 @@ async def delete_document(request: Request, app_config: AppConfig = Depends(get_
     except Exception as e:
         logger.error(f"删除文档失败: {e}")
         return error_response(500, f"删除失败: {str(e)}")
+
+
+# ========== 文件上传 ==========
+
+@router.post("/api/v1/document/upload")
+async def upload_document(
+    file: UploadFile = File(...),
+    app_id: str = Form(...),
+    app_secret: str = Form(...),
+    title: str = Form(...),
+    tags: str = Form(None),
+    source: str = Form("file"),
+    app_config: AppConfig = Depends(get_app_config)
+):
+    """文件上传接口 - 支持 Markdown、TXT、PDF、Word """
+    try:
+        # 解析tags
+        tags_list = []
+        if tags:
+            tags_list = [t.strip() for t in tags.split(',') if t.strip()]
+        
+        # 1. 保存文件
+        file_info = await file_service.save_file(file, app_config.app_id)
+        
+        # 2. 提取文本
+        try:
+            content = file_service.extract_text(file_info['stored_path'])
+        except Exception as e:
+            logger.error(f"文本提取失败: {e}")
+            return error_response(400, f"文本提取失败: {str(e)}")
+        
+        # 3. 创建文档
+        result = document_service.create_document(
+            app_config=app_config,
+            title=title or file.filename,
+            content=content,
+            tags=tags_list,
+            source=source
+        )
+        
+        # 添加文件信息
+        result['file_info'] = {
+            'original_filename': file_info['original_filename'],
+            'stored_path': file_info['stored_path'],
+            'file_size': file_info['file_size'],
+            'mime_type': file_info['mime_type']
+        }
+        
+        return success_response(result, "文件上传成功")
+        
+    except Exception as e:
+        logger.error(f"文件上传失败: {e}")
+        return error_response(500, f"文件上传失败: {str(e)}")
 
 
 # ========== 知识检索 ==========

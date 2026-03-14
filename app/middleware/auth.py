@@ -44,11 +44,19 @@ class AuthService:
 
 
 async def get_app_config(request: Request) -> AppConfig:
-    """从请求中获取并验证应用配置"""
-    body = await request.json()
+    """从请求中获取并验证应用配置 - 支持JSON和Form"""
+    content_type = request.headers.get('content-type', '')
     
-    app_id = body.get('app_id')
-    app_secret = body.get('app_secret')
+    # 尝试从JSON获取
+    if 'application/json' in content_type:
+        body = await request.json()
+        app_id = body.get('app_id')
+        app_secret = body.get('app_secret')
+    else:
+        # 从Form数据获取
+        form = await request.form()
+        app_id = form.get('app_id')
+        app_secret = form.get('app_secret')
     
     if not app_id or not app_secret:
         raise HTTPException(status_code=400, detail="缺少appId或appSecret")
