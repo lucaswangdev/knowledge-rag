@@ -134,8 +134,7 @@ knowledge-rag/
 ├── tests/
 ├── init_master.sql          # 主库初始化
 ├── init_app.sql             # 应用库初始化
-├── requirements.txt
-└── .env.example
+├── pyproject.toml              # uv 依赖管理（替代 requirements.txt）
 ```
 
 ## License
