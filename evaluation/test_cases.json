@@ -1,0 +1,231 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_at": "2026-03-14",
+    "total_documents": 11,
+    "domain": "创业知识库",
+    "description": "基于真实文档的向量检索质量评估测试用例"
+  },
+  "test_cases": [
+    {
+      "id": "test_001",
+      "query": "字节跳动是谁创立的？",
+      "query_type": "定义型",
+      "difficulty": "简单",
+      "relevant_doc_ids": [2, 8],
+      "relevance_scores": {"2": 3, "8": 3},
+      "expected_top_3": [2, 8],
+      "domain": "创业故事",
+      "notes": "测试基本事实查询，答案：张一鸣2012年创立"
+    },
+    {
+      "id": "test_002",
+      "query": "字节跳动的主要产品有哪些？",
+      "query_type": "列举型",
+      "difficulty": "简单",
+      "relevant_doc_ids": [8],
+      "relevance_scores": {"8": 3},
+      "expected_top_3": [8],
+      "domain": "创业故事",
+      "notes": "答案：今日头条、抖音、TikTok"
+    },
+    {
+      "id": "test_003",
+      "query": "天使轮融资是什么？",
+      "query_type": "定义型",
+      "difficulty": "简单",
+      "relevant_doc_ids": [5],
+      "relevance_scores": {"5": 3},
+      "expected_top_3": [5],
+      "domain": "融资",
+      "notes": "测试融资相关查询"
+    },
+    {
+      "id": "test_004",
+      "query": "天使轮融资金额通常是多少？",
+      "query_type": "定义型",
+      "difficulty": "中等",
+      "relevant_doc_ids": [5],
+      "relevance_scores": {"5": 3},
+      "expected_top_3": [5],
+      "domain": "融资",
+      "notes": "答案：50万到500万人民币"
+    },
+    {
+      "id": "test_005",
+      "query": "如何找天使投资人？",
+      "query_type": "方法型",
+      "difficulty": "中等",
+      "relevant_doc_ids": [5],
+      "relevance_scores": {"5": 3},
+      "expected_top_3": [5],
+      "domain": "融资",
+      "notes": "答案：参加创业大赛、通过人脉等"
+    },
+    {
+      "id": "test_006",
+      "query": "创业公司核心团队需要哪些角色？",
+      "query_type": "列举型",
+      "difficulty": "简单",
+      "relevant_doc_ids": [6],
+      "relevance_scores": {"6": 3},
+      "expected_top_3": [6],
+      "domain": "团队建设",
+      "notes": "答案：CTO、产品负责人、商务负责人"
+    },
+    {
+      "id": "test_007",
+      "query": "早期员工激励怎么做？",
+      "query_type": "方法型",
+      "difficulty": "中等",
+      "relevant_doc_ids": [6],
+      "relevance_scores": {"6": 3},
+      "expected_top_3": [6],
+      "domain": "团队建设",
+      "notes": "答案：期权池，预留10%-20%股权"
+    },
+    {
+      "id": "test_008",
+      "query": "什么是PMF？",
+      "query_type": "定义型",
+      "difficulty": "简单",
+      "relevant_doc_ids": [7],
+      "relevance_scores": {"7": 3},
+      "expected_top_3": [7],
+      "domain": "产品验证",
+      "notes": "答案：Product Market Fit，产品市场契合度"
+    },
+    {
+      "id": "test_009",
+      "query": "如何验证PMF？",
+      "query_type": "方法型",
+      "difficulty": "中等",
+      "relevant_doc_ids": [7],
+      "relevance_scores": {"7": 3},
+      "expected_top_3": [7],
+      "domain": "产品验证",
+      "notes": "答案：用户留存率超过40%、NPS大于50等"
+    },
+    {
+      "id": "test_010",
+      "query": "用户留存率多少算PMF？",
+      "query_type": "定义型",
+      "difficulty": "中等",
+      "relevant_doc_ids": [7],
+      "relevance_scores": {"7": 3},
+      "expected_top_3": [7],
+      "domain": "产品验证",
+      "notes": "答案：超过40%"
+    },
+    {
+      "id": "test_011",
+      "query": "OpenClaw是什么？",
+      "query_type": "定义型",
+      "difficulty": "简单",
+      "relevant_doc_ids": [10, 11],
+      "relevance_scores": {"10": 3, "11": 3},
+      "expected_top_3": [10, 11],
+      "domain": "AI工具",
+      "notes": "答案：开源AI助手，小龙虾"
+    },
+    {
+      "id": "test_012",
+      "query": "OpenClaw安装需要多久？",
+      "query_type": "定义型",
+      "difficulty": "中等",
+      "relevant_doc_ids": [11],
+      "relevance_scores": {"11": 3},
+      "expected_top_3": [11],
+      "domain": "AI工具",
+      "notes": "答案：10分钟"
+    },
+    {
+      "id": "test_013",
+      "query": "创业第一步是什么？",
+      "query_type": "方法型",
+      "difficulty": "中等",
+      "relevant_doc_ids": [6, 7],
+      "relevance_scores": {"6": 2, "7": 2},
+      "expected_top_3": [6, 7],
+      "domain": "创业通用",
+      "notes": "测试多文档相关性"
+    },
+    {
+      "id": "test_014",
+      "query": "招募联合创始人要注意什么？",
+      "query_type": "方法型",
+      "difficulty": "中等",
+      "relevant_doc_ids": [6],
+      "relevance_scores": {"6": 3},
+      "expected_top_3": [6],
+      "domain": "团队建设",
+      "notes": "答案：找互补型人才，避免能力重叠"
+    },
+    {
+      "id": "test_015",
+      "query": "NPS净推荐值多少算好？",
+      "query_type": "定义型",
+      "difficulty": "中等",
+      "relevant_doc_ids": [7],
+      "relevance_scores": {"7": 3},
+      "expected_top_3": [7],
+      "domain": "产品验证",
+      "notes": "答案：大于50"
+    },
+    {
+      "id": "test_016",
+      "query": "什么是MVP？",
+      "query_type": "定义型",
+      "difficulty": "简单",
+      "relevant_doc_ids": [7],
+      "relevance_scores": {"7": 2},
+      "expected_top_3": [7],
+      "domain": "产品验证",
+      "notes": "答案：最小可行产品"
+    },
+    {
+      "id": "test_017",
+      "query": "张一鸣创业时间",
+      "query_type": "定义型",
+      "difficulty": "简单",
+      "relevant_doc_ids": [2, 8],
+      "relevance_scores": {"2": 3, "8": 3},
+      "expected_top_3": [2, 8],
+      "domain": "创业故事",
+      "notes": "答案：2012年"
+    },
+    {
+      "id": "test_018",
+      "query": "创业公司期权池预留多少？",
+      "query_type": "定义型",
+      "difficulty": "中等",
+      "relevant_doc_ids": [6],
+      "relevance_scores": {"6": 3},
+      "expected_top_3": [6],
+      "domain": "团队建设",
+      "notes": "答案：10%-20%"
+    },
+    {
+      "id": "test_019",
+      "query": "字节跳动做什么的？",
+      "query_type": "定义型",
+      "difficulty": "简单",
+      "relevant_doc_ids": [2, 8],
+      "relevance_scores": {"2": 3, "8": 3},
+      "expected_top_3": [2, 8],
+      "domain": "创业故事",
+      "notes": "答案：专注于人工智能的科技公司"
+    },
+    {
+      "id": "test_020",
+      "query": "准备天使融资需要什么材料？",
+      "query_type": "列举型",
+      "difficulty": "中等",
+      "relevant_doc_ids": [5],
+      "relevance_scores": {"5": 3},
+      "expected_top_3": [5],
+      "domain": "融资",
+      "notes": "答案：商业计划书、产品Demo、团队介绍"
+    }
+  ]
+}

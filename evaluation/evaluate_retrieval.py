@@ -362,6 +362,32 @@ def create_mock_retrieval_function():
     return mock_retrieval
 
 
+def create_real_retrieval_function():
+    """创建真实的检索函数"""
+    print("✅ 使用真实的检索函数（Knowledge-RAG系统）\n")
+
+    from app.services.knowledge_service import knowledge_service
+    from app.services.db_service import db_router
+
+    # 获取app_001的配置
+    app_config = db_router.get_app_config("app_001")
+
+    def real_retrieval(query: str, k: int):
+        """真实检索函数"""
+        try:
+            result = knowledge_service.search(app_config, query, top_k=k)
+            if result.get('results'):
+                return [
+                    (item['document_id'], item['similarity_score'])
+                    for item in result['results']
+                ]
+        except Exception as e:
+            print(f"  ⚠️  检索出错: {e}")
+        return []
+
+    return real_retrieval
+
+
 def main():
     """主函数"""
     print("\n" + "="*70)
@@ -382,18 +408,13 @@ def main():
     # 初始化评估器
     evaluator = RetrievalEvaluator(test_cases_file)
 
-    # TODO: 替换为真实的检索函数
-    # 示例:
-    # from app.services.knowledge_service import search_knowledge
-    # def retrieval_function(query: str, k: int):
-    #     result = search_knowledge(app_id="app_001", query=query, top_k=k)
-    #     if result['success']:
-    #         return [(item['document_id'], item['similarity'])
-    #                 for item in result['data']['results']]
-    #     return []
-
-    # 使用模拟函数演示
-    retrieval_function = create_mock_retrieval_function()
+    # 使用真实的检索函数
+    try:
+        retrieval_function = create_real_retrieval_function()
+    except Exception as e:
+        print(f"❌ 无法加载检索函数: {e}")
+        print(f"请确保后端服务已启动，数据库已初始化\n")
+        return
 
     # 执行评估
     metrics = evaluator.evaluate(retrieval_function, k_values=[3, 5, 10])
