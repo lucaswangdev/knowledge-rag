@@ -36,53 +36,66 @@ Knowledge-RAG 是面向企业的私有知识库RAG服务，基于bge-m3向量模
 
 ## 快速开始
 
-### 使用uv快速启动（推荐）
+### 1. 后端启动
 
 ```bash
-# 1. 安装uv（如果未安装）
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# 2. 克隆项目
+# 克隆项目
 git clone https://github.com/lucaswangdev/knowledge-rag.git
 cd knowledge-rag
 
-# 3. 一键启动（自动安装依赖、运行测试、启动服务）
-./start.sh
+# 创建虚拟环境并安装依赖
+uv venv --python 3.11
+source .venv/bin/activate
+uv pip install -r <(cat <<EOF
+fastapi>=0.110.0
+uvicorn>=0.29.0
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+FlagEmbedding>=1.3.0
+sentence-transformers>=2.7.0
+numpy>=1.26.0
+httpx>=0.26.0
+python-multipart>=0.0.10
+EOF
+)
 
-# 或手动启动
-uv sync                    # 安装依赖
-uv run pytest tests/ -v    # 运行测试
-uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+# 启动后端服务（端口8000）
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-### 传统方式启动
+### 2. 前端启动
 
 ```bash
-# 1. 配置环境
-cp .env.example .env
-# 编辑 .env 配置数据库连接
+# 进入前端目录
+cd front-end
 
-# 2. 使用Docker
-docker-compose up -d
+# 安装依赖
+npm install
 
-# 或本地开发
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+# 启动前端（端口5173）
+npm run dev
 ```
 
-### 初始化数据库
+### 3. 初始化数据库
 
 ```bash
 # 创建主数据库
 psql -h localhost -U postgres -c "CREATE DATABASE knowledge_master;"
-
-# 执行初始化SQL
 psql -h localhost -U postgres -d knowledge_master -f init_master.sql
 
-# 创建应用数据库（示例）
+# 创建应用数据库
 psql -h localhost -U postgres -c "CREATE DATABASE knowledge_app_001;"
 psql -h localhost -U postgres -d knowledge_app_001 -f init_app.sql
 ```
+
+### 访问地址
+
+- 后端API: http://localhost:8000
+- 前端页面: http://localhost:5173
+- API文档: http://localhost:8000/docs
 
 
 ## 📁 项目文档
@@ -120,14 +133,21 @@ knowledge-rag/
 │       ├── bge_service.py   # 向量化服务
 │       ├── db_service.py    # 数据库服务
 │       ├── document_service.py
-│       └── knowledge_service.py
+│       ├── knowledge_service.py
+│       └── file_service.py  # 文件上传服务
+├── front-end/               # 前端项目 (React + Vite + TypeScript)
+│   ├── src/
+│   │   ├── api/            # API调用
+│   │   ├── components/     # React组件
+│   │   └── store/          # Zustand状态管理
+│   └── ...
 ├── docker/
 │   ├── Dockerfile
 │   └── docker-compose.yml
 ├── tests/
 ├── init_master.sql          # 主库初始化
 ├── init_app.sql             # 应用库初始化
-├── pyproject.toml              # uv 依赖管理（替代 requirements.txt）
+└── pyproject.toml           # uv依赖管理
 ```
 
 ## License

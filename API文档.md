@@ -41,6 +41,7 @@
 | POST | /api/v1/document/list | 文档列表 |
 | POST | /api/v1/document/get | 文档详情 |
 | POST | /api/v1/document/delete | 删除文档 |
+| POST | /api/v1/document/upload | **文件上传（支持Markdown等）** |
 | POST | /api/v1/knowledge/search | 语义搜索 |
 | POST | /api/v1/knowledge/chat | RAG问答 |
 
@@ -380,3 +381,64 @@ curl -X POST "http://localhost:8000/api/v1/knowledge/chat" \
 启动服务后访问：
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
+
+---
+
+## 文件上传
+
+### 上传文档
+
+**POST** `/api/v1/document/upload`
+
+> ⚠️ 注意：此接口使用 `multipart/form-data` 格式
+
+```bash
+curl -X POST "http://localhost:8000/api/v1/document/upload" \
+  -F "file=@创业故事.md" \
+  -F "app_id=app_001" \
+  -F "app_secret=test_secret_001" \
+  -F "title=字节跳动创业故事" \
+  -F "tags=创业,互联网" \
+  -F "source=file"
+```
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| file | File | ✅ | 上传的文件（支持 MD, TXT, PDF, DOCX） |
+| app_id | string | ✅ | 应用ID |
+| app_secret | string | ✅ | 应用密钥 |
+| title | string | ✅ | 文档标题 |
+| tags | string | ❌ | 标签（逗号分隔，如 "创业,互联网"） |
+| source | string | ❌ | 来源，默认 `file` |
+
+```json
+{
+    "success": true,
+    "code": 0,
+    "message": "文件上传成功",
+    "data": {
+        "document_id": 8,
+        "chunks_created": 1,
+        "title": "测试Markdown文件",
+        "created_at": "2026-03-14T18:25:54.942051",
+        "file_info": {
+            "original_filename": "test.md",
+            "stored_path": "./storage/uploads/app_001/2026/03/14/xxx.md",
+            "file_size": 202,
+            "mime_type": "text/markdown"
+        }
+    }
+}
+```
+
+### 支持的文件格式
+
+| 格式 | 扩展名 | MIME类型 |
+|------|--------|----------|
+| Markdown | .md, .markdown | text/markdown |
+| 纯文本 | .txt | text/plain |
+| PDF | .pdf | application/pdf |
+| Word | .docx | application/vnd.openxmlformats-officedocument.wordprocessingml.document |
+
+> PDF和Word解析需要安装额外依赖：`pip install pypdf python-docx`
+
