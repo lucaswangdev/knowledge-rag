@@ -3,20 +3,24 @@
 ## 使用 uv 安装（推荐）
 
 ```bash
-# 安装必需依赖
-uv pip install numpy pydantic-settings psycopg2-binary
-
-# 或者一次性安装所有依赖
+# 方式1：使用 uv pip（推荐）
 uv pip install numpy pydantic-settings psycopg2-binary sqlalchemy httpx
+
+# 方式2：使用 uv add（如果是 uv 项目）
+uv add numpy pydantic-settings psycopg2-binary sqlalchemy httpx
+
+# 方式3：单独安装每个依赖
+uv pip install numpy
+uv pip install pydantic-settings
+uv pip install psycopg2-binary
+uv pip install sqlalchemy
+uv pip install httpx
 ```
 
-## 使用 pip 安装
+## 使用 pip 安装（备选）
 
 ```bash
-# 安装必需依赖
-pip install numpy pydantic-settings psycopg2-binary
-
-# 或者一次性安装所有依赖
+# 一次性安装所有依赖
 pip install numpy pydantic-settings psycopg2-binary sqlalchemy httpx
 ```
 
@@ -34,7 +38,10 @@ pip install numpy pydantic-settings psycopg2-binary sqlalchemy httpx
 # 确保在项目根目录
 cd /path/to/knowledge-rag
 
-# 运行评估脚本
+# 使用 uv run 运行（推荐）
+uv run python evaluation/evaluate_retrieval.py
+
+# 或者直接运行
 python evaluation/evaluate_retrieval.py
 ```
 

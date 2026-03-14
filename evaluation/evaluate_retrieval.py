@@ -303,10 +303,13 @@ class RetrievalEvaluator:
 
         # 打印检查结果
         for check, level, value in checks:
-            if isinstance(value, float) and value < 10:
+            # 判断是否是响应时间指标（包含 "ms"）
+            if "ms" in check:
+                print(f"  {check}: {value:.2f}ms ({level})")
+            elif isinstance(value, float) and value < 10:
                 print(f"  {check}: {value:.3f} ({level})")
             else:
-                print(f"  {check}: {value:.2f}% ({level})" if value > 1 else f"  {check}: {value:.3f} ({level})")
+                print(f"  {check}: {value:.2f}% ({level})")
 
         # 总体评估
         pass_count = sum(1 for c, _, _ in checks if "✅" in c)
