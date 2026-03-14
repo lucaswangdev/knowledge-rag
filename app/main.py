@@ -28,13 +28,13 @@ async def lifespan(app: FastAPI):
     # 初始化主数据库连接
     db_router.init_master()
     
-    # 预加载模型（可选，懒加载也可以）
-    # bge3_service.load_model(
-    #     model_name=settings.model_name,
-    #     use_fp16=settings.use_fp16,
-    #     device=settings.device,
-    #     cache_folder=settings.model_path
-    # )
+    # 加载BGE-M3模型
+    bge3_service.load_model(
+        model_name=settings.model_name,
+        use_fp16=settings.use_fp16,
+        device=settings.device,
+        cache_folder=settings.model_path
+    )
     
     logger.info("Knowledge-RAG 启动完成")
     logger.info("=" * 50)

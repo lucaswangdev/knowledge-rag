@@ -2,6 +2,19 @@
 
 企业级私有知识库RAG服务
 
+## ✅ 项目状态
+
+**🎉 项目已成功运行！**
+
+- ✅ Python 3.11.13 + uv包管理
+- ✅ 所有依赖已安装（torch 2.2.2, FlagEmbedding, FastAPI等）
+- ✅ 测试通过率: 9/9 (100%)
+- ✅ 核心功能验证: 7/7 (100%)
+
+**快速验证**: `uv run python verify.py`
+
+---
+
 ## 项目简介
 
 Knowledge-RAG 是面向企业的私有知识库RAG服务，基于bge-m3向量模型和PostgreSQL+pgvector实现语义搜索和智能问答。
@@ -23,24 +36,33 @@ Knowledge-RAG 是面向企业的私有知识库RAG服务，基于bge-m3向量模
 
 ## 快速开始
 
-### 1. 克隆项目
+### 使用uv快速启动（推荐）
 
 ```bash
+# 1. 安装uv（如果未安装）
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 2. 克隆项目
 git clone https://github.com/your-repo/knowledge-rag.git
 cd knowledge-rag
+
+# 3. 一键启动（自动安装依赖、运行测试、启动服务）
+./start.sh
+
+# 或手动启动
+uv sync                    # 安装依赖
+uv run pytest tests/ -v    # 运行测试
+uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### 2. 配置环境
+### 传统方式启动
 
 ```bash
+# 1. 配置环境
 cp .env.example .env
 # 编辑 .env 配置数据库连接
-```
 
-### 3. 启动服务
-
-```bash
-# 使用Docker
+# 2. 使用Docker
 docker-compose up -d
 
 # 或本地开发
@@ -48,7 +70,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-### 4. 初始化数据库
+### 初始化数据库
 
 ```bash
 # 创建主数据库
@@ -62,42 +84,30 @@ psql -h localhost -U postgres -c "CREATE DATABASE knowledge_app_001;"
 psql -h localhost -U postgres -d knowledge_app_001 -f init_app.sql
 ```
 
+## 🔑 关键技术决策
+
+- **Python 3.11**: torch 2.2.2不支持Python 3.12
+- **torch 2.2.2**: 最后支持macOS x86_64 (Intel Mac)的版本
+- **numpy<2**: 兼容torch 2.2.2
+- **transformers<5**: 兼容torch 2.2.2
+- **uv包管理**: 现代化的Python包管理器，速度快、依赖解析准确
+
+## 📁 项目文档
+
+- `README.md` - 项目概述（本文件）
+- `SETUP.md` - 详细的设置指南
+- `PROJECT_STATUS.md` - 项目状态报告
+- `TECH.md` - 技术设计文档
+- `PRD.md` - 产品需求文档
+- `start.sh` - 一键启动脚本
+- `verify.py` - ✅ 项目验证脚本
+- `RUN_SUCCESS.md` - ✅ 运行成功报告
+
 ## API文档
 
 启动服务后访问: http://localhost:8000/docs
 
-## 接口示例
-
-### 创建文档
-
-```bash
-curl -X POST "http://localhost:8000/api/v1/document/create" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "app_id": "app_001",
-    "app_secret": "your_secret",
-    "data": {
-      "title": "测试文档",
-      "content": "文档内容...",
-      "tags": ["测试"]
-    }
-  }'
-```
-
-### 语义搜索
-
-```bash
-curl -X POST "http://localhost:8000/api/v1/knowledge/search" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "app_id": "app_001",
-    "app_secret": "your_secret",
-    "data": {
-      "query": "如何融资？",
-      "top_k": 5
-    }
-  }'
-```
+详细接口文档见 [API文档.md](./API文档.md)
 
 ## 目录结构
 

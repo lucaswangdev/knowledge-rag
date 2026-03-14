@@ -35,7 +35,7 @@ def test_missing_credentials(client):
     response = client.post("/api/v1/document/list", json={
         "data": {}
     })
-    assert response.status_code == 422  # FastAPI validation error
+    assert response.status_code == 400  # Missing credentials
 
 
 def test_invalid_app_id(client):
