@@ -1,6 +1,6 @@
 import { useAppStore } from '../store/useAppStore';
 
-const API_BASE_URL = 'http://localhost:8001';
+const API_BASE_URL = 'http://localhost:8000';
 
 interface ApiResponse<T> {
   success: boolean;

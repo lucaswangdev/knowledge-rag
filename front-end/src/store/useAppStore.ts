@@ -53,7 +53,7 @@ export const useAppStore = create<AppState>((set) => ({
   config: {
     appId: 'app_001',
     appSecret: 'test_secret_001',
-    apiBaseUrl: 'http://localhost:8001',
+    apiBaseUrl: 'http://localhost:8000',
   },
   setConfig: (config) => set({ config }),
   
