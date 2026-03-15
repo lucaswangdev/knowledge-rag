@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { uploadDocument, getDocumentList, searchKnowledge, deleteDocument } from '../api';
 
@@ -6,7 +6,7 @@ export function FileUploader() {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState('');
   const [tags, setTags] = useState('');
-  const { isUploading, setIsUploading, addDocument } = useAppStore();
+  const { isUploading, setIsUploading } = useAppStore();
 
   const handleUpload = async () => {
     if (!file || !title) return;

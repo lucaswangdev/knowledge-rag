@@ -2,13 +2,6 @@ import { useAppStore } from '../store/useAppStore';
 
 const API_BASE_URL = 'http://localhost:8000';
 
-interface ApiResponse<T> {
-  success: boolean;
-  code: number;
-  message: string;
-  data: T;
-}
-
 // 文件上传
 export async function uploadDocument(file: File, title: string, tags: string[]): Promise<any> {
   const { config } = useAppStore.getState();

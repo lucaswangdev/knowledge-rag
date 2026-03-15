@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { FileUploader, DocumentList, KnowledgeSearch } from './components';
 import { useAppStore } from './store/useAppStore';
 
